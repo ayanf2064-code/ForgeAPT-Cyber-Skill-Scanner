@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ForgeAPT — Cyber & AI Skill Scanner</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Orbitron:wght@500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <canvas id="webgl-bg"></canvas>
+  <div id="particles" class="particles" aria-hidden="true"></div>
+  <div class="cyber-grid"></div>
+  <div class="vignette"></div>
+  <div id="app">
+    <!-- HEADER -->
+    <header class="header">
+      <div class="logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">Forge<span>APT</span></span>
+      </div>
+      <nav class="nav" id="mainNav">
+        <button class="nav-btn active" data-view="home">Home</button>
+        <button class="nav-btn" data-view="task1">Practical</button>
+        <button class="nav-btn" data-view="task2">MCQs</button>
+        <button class="nav-btn" data-view="task3">Exam</button>
+        <button class="nav-btn" data-view="results">Results</button>
+        <button class="nav-btn" data-view="about">About</button>
+      </nav>
+      <div class="header-right">
+        <div id="globalTimer">⏱ 00:00</div>
+        <div id="timerDisplay" class="timer hidden">30:00</div>
+        <button id="themeToggle" class="icon-btn" title="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <!-- HOME -->
+    <section id="home" class="view active">
+      <div class="hero">
+        <div class="hero-badge">TEAM ASSESSMENT • LOCALHOST ONLY</div>
+        <h1>Know Your Level.<br/><span class="gradient-text">Forge the Team.</span></h1>
+        <p class="hero-sub">
+          A unique skill scanner built for small elite teams. Complete 3 tasks → get a precise knowledge matrix
+          across Linux, Networking, Hacking, Tools & AI. Then start learning from the weakest link — together.
+        </p>
+        <div class="hero-actions">
+          <button class="btn primary btn-hero" onclick="startAssessment()">🚀 Start Knowledge Test</button>
+          <button class="btn ghost" onclick="showView('about')">Project Vision</button>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-num">3</div>
+          <div class="stat-label">Tasks</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">20+</div>
+          <div class="stat-label">Modules Covered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">30</div>
+          <div class="stat-label">MCQs</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">∞</div>
+          <div class="stat-label">Team Growth</div>
+        </div>
+      </div>
+
+      <div class="task-cards">
+        <div class="task-card" onclick="showView('task1')">
+          <div class="task-icon">01</div>
+          <h3>Practical Lab</h3>
+          <p>THM-style labs: type the real command / payload / tool name. Easy / Medium / Hard scenarios.</p>
+          <span class="task-tag">Hands-on thinking</span>
+        </div>
+        <div class="task-card" onclick="showView('task2')">
+          <div class="task-icon">02</div>
+          <h3>30 MCQs</h3>
+          <p>10 Hacking • 10 Tools • 10 AI Security. Pure knowledge check with instant feedback option.</p>
+          <span class="task-tag">Speed & Accuracy</span>
+        </div>
+        <div class="task-card" onclick="showView('task3')">
+          <div class="task-icon">03</div>
+          <h3>Timed Exam</h3>
+          <p>20 short-answer questions • 30-min timer. Type the answer (no MCQs). Hints cost points.</p>
+          <span class="task-tag">Under pressure</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- TASK 1: PRACTICAL -->
+    <section id="task1" class="view">
+      <div class="section-header">
+        <h2>Task 01 — Practical Scenarios</h2>
+        <p>THM-style practical labs. Type the actual command, payload or tool name.</p>
+        <div class="progress-bar"><div id="t1Progress" class="progress-fill"></div></div>
+        <div class="meta-row">
+          <span id="t1Counter">Question 1 / 9</span>
+          <span id="t1Score">Score: 0</span>
+        </div>
+      </div>
+      <div id="t1Container" class="question-box"></div>
+      <div class="nav-actions">
+        <button class="btn ghost" id="t1Prev" onclick="prevT1()" disabled>← Previous</button>
+        <button class="btn primary" id="t1Next" onclick="nextT1()">Next →</button>
+      </div>
+    </section>
+
+    <!-- TASK 2: MCQs -->
+    <section id="task2" class="view">
+      <div class="section-header">
+        <h2>Task 02 — 30 MCQs</h2>
+        <p>10 Hacking • 10 Tools • 10 AI. Choose the best answer.</p>
+        <div class="progress-bar"><div id="t2Progress" class="progress-fill"></div></div>
+        <div class="meta-row">
+          <span id="t2Counter">Question 1 / 30</span>
+          <span id="t2Score">Score: 0</span>
+        </div>
+      </div>
+      <div id="t2Container" class="question-box"></div>
+      <div class="nav-actions">
+        <button class="btn ghost" id="t2Prev" onclick="prevT2()" disabled>← Previous</button>
+        <button class="btn primary" id="t2Next" onclick="nextT2()">Next →</button>
+      </div>
+    </section>
+
+    <!-- TASK 3: EXAM -->
+    <section id="task3" class="view">
+      <div class="section-header">
+        <h2>Task 03 — Timed Exam</h2>
+        <p>20 short-answer questions • 30 minutes. Type answers. Hint = −2 points.</p>
+        <div class="progress-bar"><div id="t3Progress" class="progress-fill"></div></div>
+        <div class="meta-row">
+          <span id="t3Counter">Question 1 / 20</span>
+          <span id="t3Score">Score: 0</span>
+        </div>
+      </div>
+      <div id="t3Container" class="question-box"></div>
+      <div class="nav-actions">
+        <button class="btn ghost" id="t3Prev" onclick="prevT3()" disabled>← Previous</button>
+        <button class="btn secondary" id="t3Hint" onclick="showHint()">Show Hint (−2)</button>
+        <button class="btn primary" id="t3Next" onclick="nextT3()">Next →</button>
+      </div>
+    </section>
+
+    <!-- RESULTS -->
+    <section id="results" class="view">
+      <div class="section-header">
+        <h2>Your Knowledge Matrix</h2>
+        <p>Based on all three tasks. This is what the team will use to decide the starting point.</p>
+      </div>
+      <div id="resultsContainer">
+        <div class="empty-state">
+          <p>Complete all three tasks and click <strong>Submit Final</strong> to generate your report.</p>
+          <button class="btn primary" onclick="generateResults()">Generate Report Now</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="view">
+      <div class="about-content">
+        <h2>About ForgeAPT</h2>
+        <p class="lead">
+          Built for small elite teams (5–10 people) who want to grow together like a real APT group —
+          structured, practical, zero fluff.
+        </p>
+
+        <div class="about-grid">
+          <div class="about-card">
+            <h3>The Idea</h3>
+            <p>
+              After watching CyberMindSpace (Almadad Ali Sir) modules, the team realised that everyone
+              claims “I’m 100% ready”. This scanner forces truth. You take the test → the system tells
+              you exactly where you are weak (Linux, Networking, Web, AI, Tools…) → the whole team
+              starts learning from the lowest common level. No one left behind.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>Why This Project is Unique</h3>
+            <ul>
+              <li>Three distinct evaluation modes in one tool</li>
+              <li>Category-level diagnosis (not just total score)</li>
+              <li>Hint system with real penalty (exam realism)</li>
+              <li>Pure frontend — runs offline on any machine</li>
+              <li>Designed to be the first project a new team ships together</li>
+            </ul>
+          </div>
+          <div class="about-card">
+            <h3>Modules Covered</h3>
+            <p>
+              Introduction, Footprinting & Recon, Scanning, Enumeration, Vulnerability Analysis,
+              System Hacking (Windows/Linux PrivEsc), Malware, Sniffing, Social Engineering, DoS,
+              Session Hijacking, IDS/Firewalls/Honeypots, Web Server Security, Web App Hacking,
+              SQL Injection, Wireless, Mobile, plus AI security concepts.
+            </p>
+          </div>
+          <div class="about-card">
+            <h3>How to Run</h3>
+            <pre class="code-block">
+# Windows / Linux / macOS
+# Option 1 — simplest
+just open index.html in any modern browser
+
+# Option 2 — proper localhost
+python -m http.server 8080
+# then open http://localhost:8080
+
+# Option 3 — Node
+npx serve .
+            </pre>
+          </div>
+        </div>
+
+        <div class="github-box">
+          <h3>Make this your GitHub VIP project</h3>
+          <p>
+            Push this repo, add a good README, screenshots, and a short demo video.
+            Recruiters and other hackers will notice a clean, purposeful project like this.
+          </p>
+          <p class="small">Created for the team • October 2026 • Localhost only • No data leaves your machine</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <span>ForgeAPT Skill Scanner • Team Assessment Tool</span>
+      <span>Built for Cyber + AI elite teams</span>
+    </footer>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
